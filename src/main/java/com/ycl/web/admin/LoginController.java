@@ -1,9 +1,11 @@
 package com.ycl.web.admin;
 
 import com.ycl.po.User;
+import com.ycl.service.BlogService;
 import com.ycl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 
-/**
- * Created by limi on 2017/10/15.
- */
+
 @Controller
 @RequestMapping("/admin")
 public class LoginController {
@@ -22,6 +22,9 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BlogService blogService;
 
     @GetMapping
     public String loginPage() {
@@ -49,5 +52,11 @@ public class LoginController {
     public String logout(HttpSession session) {
         session.removeAttribute("user");
         return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/footer/newblog")
+    public String newblogs(Model model) {
+        model.addAttribute("newblogs", blogService.listRecommendBlogTop(3));
+        return "_fragments :: newblogList";
     }
 }
